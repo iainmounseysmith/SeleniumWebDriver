@@ -10,20 +10,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+import static com.selenium.environment.MyDriverManager.*;
 import static com.selenium.helpers.HelperClassesOLD.takeSnapShotFILE;
-
+import static com.selenium.environment.EnvironmentUnderTest.*;
 /**
  * Created by Iain Mounsey-Smith on 22/11/2015.
  */
 public class MyPageFactory {
-    public static WebDriver driver;
-
-    final private String PROTOCOL="http:";
-    final private String DOMAIN = "www.compendiumdev.co.uk/";
-
+    //public static WebDriver driver;
     final private String A = "AssertThat ";
-
     public static WebDriverWait wait;
     private BasicAjaxPageObject basicAjaxPage;
     private ProcessedFormPageObject ProcessedFormPage;
@@ -31,16 +26,15 @@ public class MyPageFactory {
 
     @BeforeClass
     public static void setupDriver() {
-        //startBrowserAndSelectServer();
-        driver = new FirefoxDriver();
-        wait = new WebDriverWait(driver, 10, 50);
+        set(driverOrBrowserName.IE);
+
     }
     @Before
     public void miscSetupBeforeTest() {
-        //wait = new WebDriverWait(Adriver, 10, 50); //moved into startBrowserAndSelectServer
-        basicAjaxPage = new BasicAjaxPageObject(driver);
-        ProcessedFormPage = new ProcessedFormPageObject(driver);
-        basicAjaxPage.get();}
+        get(getUrl("basic_ajax"));
+        basicAjaxPage = new BasicAjaxPageObject(aDriver);
+        ProcessedFormPage = new ProcessedFormPageObject(aDriver);
+        }
 
     private enum Category2 {
         Web  (1),  //calls constructor with value 3
@@ -66,17 +60,16 @@ public class MyPageFactory {
             this.LanguageCode = levelCode;//setting field variable levelCode to equal what is passed in the constructor
         }
     }
-
     @Test
     public void waitingForAjaxToCompleteRefactored(){
-         basicAjaxPage.selectCategory(Category2.Server.CategoryCode);     //findCombo1AndSelectOptionServer();
-         basicAjaxPage.selectCombo2Language(LanguageCodes2.JAVA.LanguageCode);//selectCombo2Language();
+        basicAjaxPage.selectCategory(Category2.Server.CategoryCode);     //findCombo1AndSelectOptionServer();
+        basicAjaxPage.selectCombo2Language(LanguageCodes2.JAVA.LanguageCode);//selectCombo2Language();
         basicAjaxPage.clickCodeInItButton();//submitFormandCheckResult
-          ProcessedFormPage.waitUntilPageIsLoaded();
-         //MatcherAssert.assertThat("The correct getText is '23'", ProcessedFormPage.waitUntilPageIsLoaded(), CoreMatchers.is("23"));
-         takeSnapShotFILE(driver);
+        ProcessedFormPage.waitUntilPageIsLoaded();
+        //MatcherAssert.assertThat("The correct getText is '23'", ProcessedFormPage.waitUntilPageIsLoaded(), CoreMatchers.is("23"));
+        //takeSnapShotFILE(aDriver);
      }
-    @Test
+  @Test
     public void testWebJavaScript(){
         basicAjaxPage.selectCategory(Category2.Web.CategoryCode);
         basicAjaxPage.selectCombo2Language(LanguageCodes2.JAVASCRIPT.LanguageCode);
@@ -90,9 +83,7 @@ public class MyPageFactory {
         basicAjaxPage.clickCodeInItButton();
         ProcessedFormPage.waitUntilPageIsLoaded();
     }
-
-
     @AfterClass
     public static void quitDriver() {
-        driver.quit();
+        aDriver.quit();
     } }
