@@ -6,15 +6,16 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import static com.selenium.environment.MyDriverManager.*;
 import static com.selenium.helpers.HelperClassesOLD.takeSnapShotFILE;
 import static com.selenium.environment.EnvironmentUnderTest.*;
 /**
  * Created by Iain Mounsey-Smith on 22/11/2015.
+ * This script demonstrates some basic Selenium Webdriver testing of a test site using page objects.
+ * One drop-down is selected and another drop-down is populated via Ajax calls based on the first selected option.
+ * A combination of enums, page objects and WebDriver wait commands accomplishes the testing of 3 combinations of drop-down options,
+ * which could easily be expanded to more combinations as required
  */
 public class MyPageFactory {
     //public static WebDriver driver;
@@ -26,7 +27,7 @@ public class MyPageFactory {
 
     @BeforeClass
     public static void setupDriver() {
-        set(driverOrBrowserName.IE);
+        set(driverOrBrowserName.GOOGLECHROME);
 
     }
     @Before
@@ -61,15 +62,15 @@ public class MyPageFactory {
         }
     }
     @Test
-    public void waitingForAjaxToCompleteRefactored(){
+    public void testServerJava(){
         basicAjaxPage.selectCategory(Category2.Server.CategoryCode);     //findCombo1AndSelectOptionServer();
         basicAjaxPage.selectCombo2Language(LanguageCodes2.JAVA.LanguageCode);//selectCombo2Language();
         basicAjaxPage.clickCodeInItButton();//submitFormandCheckResult
         ProcessedFormPage.waitUntilPageIsLoaded();
         //MatcherAssert.assertThat("The correct getText is '23'", ProcessedFormPage.waitUntilPageIsLoaded(), CoreMatchers.is("23"));
-        //takeSnapShotFILE(aDriver);
+        takeSnapShotFILE(aDriver);
      }
-  @Test
+ @Test
     public void testWebJavaScript(){
         basicAjaxPage.selectCategory(Category2.Web.CategoryCode);
         basicAjaxPage.selectCombo2Language(LanguageCodes2.JAVASCRIPT.LanguageCode);
