@@ -8,7 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import static com.selenium.environment.MyDriverManager.*;
-import static com.selenium.helpers.HelperClassesOLD.takeSnapShotFILE;
+import static com.selenium.environment.HelperClasses.*;
 import static com.selenium.environment.EnvironmentUnderTest.*;
 /**
  * Created by Iain Mounsey-Smith on 22/11/2015.
@@ -76,6 +76,7 @@ public class MyPageFactory {
         basicAjaxPage.selectCombo2Language(LanguageCodes2.JAVASCRIPT.LanguageCode);
         basicAjaxPage.clickCodeInItButton();
         ProcessedFormPage.waitUntilPageIsLoaded();
+        takeSnapShotFILE(aDriver);
     }
     @Test
     public void testDesktopVisual_Basic(){
@@ -83,6 +84,7 @@ public class MyPageFactory {
         basicAjaxPage.selectCombo2Language(LanguageCodes2.VISUAL_BASIC.LanguageCode);
         basicAjaxPage.clickCodeInItButton();
         ProcessedFormPage.waitUntilPageIsLoaded();
+        takeSnapShotFILE(aDriver);
     }
     @AfterClass
     public static void quitDriver() {
