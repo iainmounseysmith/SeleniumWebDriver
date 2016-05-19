@@ -1,28 +1,31 @@
 package com.selenium.GoogleWebToolkit.CheckBox;
 
-import org.apache.xpath.operations.Bool;
+import com.selenium.environment.HelperClasses;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import com.selenium.GoogleWebToolkit.CheckBox.ListofCheckBoxsTest;
+
 import static com.selenium.environment.MyDriverManager.aDriver;
 import static com.selenium.environment.MyDriverManager.waitForJStoLoad;
-import static com.selenium.GoogleWebToolkit.CheckBox.ListofCheckBoxsTest.*;
-import static com.selenium.environment.HelperClasses.*;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-
+import static org.junit.Assert.fail;
 /**
  * Created by Iain Mounsey-Smith on 1/05/2016.
+ * clickCheckBox(String idOfCheckBox)
+ * clickCheckBox(String idOfCheckBox,String action)
+ *  action = clickon or clickoff
+ *
+ *  defaultTest(String idOfCheckBox,boolean defaultstate)
+ *  false = NOT selected
+ *  true = selected
  */
 public class IndividualCheckBoxTest {
-    public WebElement elementUnderTest;
-
+    private WebElement checkbox;
+private WebDriver driver;
     public IndividualCheckBoxTest(WebDriver aDriver) {
-
+        driver=aDriver;
     }
     @BeforeClass
     public static void setupDriver() {
@@ -51,43 +54,87 @@ public class IndividualCheckBoxTest {
     }
 
     @Test
-    public void clickCheckBox(String idOfCheckBox) {
-        elementUnderTest  = aDriver.findElement(By.cssSelector("input[id=\"" + idOfCheckBox + "\"]"));
-        elementUnderTest.click();
-        isCheckBoxNotTicked(elementUnderTest);
+    public void clickCheckBox(String idOfCheckBox,String action) {
+        try {
+            checkbox  = driver.findElement(By.cssSelector("input[id=\"" + idOfCheckBox + "\"]"));
+            if (action=="clickon"){
+                //testThatCheckBoxIsTickedIfNotForceUsingJavaScript(elementUnderTest);
+                if (checkbox.isSelected()==false) //if TRUE then tester is asking for the wrong thing
+                { System.out.println("clickon-isSelected is fALSE");
+                    checkbox.click();
+                    if (checkbox.isSelected()==false){
+                        System.out.println("clickon-Checkbox is NOT selected");
+                        CheckBoxNotTickedSoUseJavaScriptToTickIt(checkbox);
+                        assertThat("dfdf",checkbox.isSelected(),is(true));}//we'll force it using javascript
+                }else{
+                    System.out.println("The checkbox is already selected - so I've made NO change ");
+                    //add assert here to echk selected
+                }
+                assertThat("dfdf",checkbox.isSelected(),is(true));
+            }
+            if (action=="clickoff"){
+                //isCheckBoxNotTicked(elementUnderTest);
+                if (checkbox.isSelected()==true){
+                    System.out.println("clickoff-Checkbox IS selected");
+                    checkbox.click();
+                    if (checkbox.isSelected()==true){
+                        System.out.println("clickoff-isSelected IS TRUE");
+                        CheckBoxNotTickedSoUseJavaScriptToTickIt(checkbox);//we'll force it using javascript
+                        assertThat("dfdf", checkbox.isSelected(), is(false));
+                    }
+                }else{
+                    System.out.println("The checkbox is already de-selected - so I've made NO change ");
+                    //CheckBoxNotTickedSoUseJavaScriptToTickIt(checkbox);
+                    //System.out.println("Checkbox IS selected");
+                }
+                //AssertAction(checkbox,selected);
+                assertThat("dfdf",checkbox.isSelected(),is(false));
+            }
+                    } catch (NoSuchElementException e) {
+            fail("Element not found - using id: \" "+ idOfCheckBox+ "\"");
+            //e.printStackTrace();
+        }
+        //checkbox.click();
+
     }
+    //from clickon, if not selected then use javascript
+   // public static void testThatCheckBoxIsTickedIfNotForceUsingJavaScript(WebElement checkbox) {
+
+   // }
+       /* public static void AssertAction(WebElement elementundertest String state){
+            if (state="selected"){Boolean state=True;)
+            assertThat("dfdf",state,elementundertest.isSelected());
+        }*/
+    public void CheckBoxNotTickedSoUseJavaScriptToTickIt(WebElement checkbox) {
+        System.out.println("Using Java to make selection");
+        HelperClasses.js = (JavascriptExecutor) driver;
+        System.out.println("CheckBoxNotTickedSoUseJavaScriptToTickIt");
+        HelperClasses.js.executeScript("function toggle(checked) {" +
+                "var element = document.getElementById('" + checkbox.getAttribute("id") + "');" +
+                "if (checked != element.checked) {" +
+                "element.click();" +
+                "}}" +
+                "toggle();");
+    }
+
+
     @Test
-    public void clickCheckBox(String idOfCheckBox,String toggle) {
-        elementUnderTest  = aDriver.findElement(By.cssSelector("input[id=\"" + idOfCheckBox + "\"]"));
-        elementUnderTest.click();
-        if (toggle=="clickon"){
-            testThatCheckBoxIsTickedIfNotForceUsingJavaScript(elementUnderTest);
-        }
-        if (toggle=="clickoff"){
-            isCheckBoxNotTicked(elementUnderTest);
-        }
-    }
+    public void clickCheckBox(String idOfCheckBox) {
+        checkbox  = driver.findElement(By.cssSelector("input[id=\"" + idOfCheckBox + "\"]"));
+        checkbox.click();
+           }
+
 
     public void defaultTest(String idOfCheckBox,boolean defaultstate) {
         //true = selected, false = not selected
-        elementUnderTest  = aDriver.findElement(By.cssSelector("input[id=\"" + idOfCheckBox + "\"]"));
-        assertThat("Checking default state of check box",elementUnderTest.isSelected(),is(equalTo(defaultstate)));
+        try {
+            checkbox  = driver.findElement(By.cssSelector("input[id=\"" + idOfCheckBox + "\"]"));
+            assertThat("Checking default state of check box",checkbox.isSelected(),is(equalTo(defaultstate)));
+        } catch (Exception e) {
+            //e.printStackTrace();
+            fail("Element not found - using id: \" " + idOfCheckBox + "\"");
+        }
     }
 
-    public void changeStateThenChangeBack(String idOfCheckBox,Boolean initialState) {
-        elementUnderTest  = aDriver.findElement(By.cssSelector("input[id=\"" + idOfCheckBox + "\"]"));
-if(initialState =false)
-    {
-        elementUnderTest.click();
-        testThatCheckBoxIsTickedIfNotForceUsingJavaScript(elementUnderTest);
-        assertThat(elementUnderTest.isSelected(), is(equalTo(true)));
-        elementUnderTest.click();
-        assertThat(elementUnderTest.isSelected(), is(equalTo(false)));
-    }else{
-    elementUnderTest.click();
-    testThatCheckBoxIsTickedIfNotForceUsingJavaScript(elementUnderTest);
-    assertThat(elementUnderTest.isSelected(), is(equalTo(false)));
-    elementUnderTest.click();
-    assertThat(elementUnderTest.isSelected(), is(equalTo(true)));
-    }
-}}
+
+}
