@@ -5,12 +5,16 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 import static com.selenium.environment.MyDriverManager.aDriver;
+import static com.selenium.environment.MyDriverManager.wait;
 import static com.selenium.environment.MyDriverManager.waitForJStoLoad;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.fail;
+//import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+
 /**
  * Created by Iain Mounsey-Smith on 1/05/2016.
  * clickCheckBox(String idOfCheckBox)
@@ -24,11 +28,14 @@ import static org.junit.Assert.fail;
 public class IndividualCheckBoxTest {
     private WebElement checkbox;
 private WebDriver driver;
+   public WebDriverWait wait;
     public IndividualCheckBoxTest(WebDriver aDriver) {
         driver=aDriver;
+        wait = new WebDriverWait(driver,10,10);//This waits for 10 seconds for title to appear, polling every 50 ms.
+        waitForJStoLoad(wait);
     }
     @BeforeClass
-    public static void setupDriver() {
+    public void setupDriver() {
         //System.setProperty(MY_DRIVER, driverOrBrowserName.GOOGLECHROME.name());
         //System.setProperty(MY_DRIVER, "firefox");//old
 
@@ -49,14 +56,17 @@ private WebDriver driver;
         //get(getUrl("GWTCheckBox"));
         //System.out.println("local aDriver " + aDriver.getCurrentUrl());
 
-        WebDriverWait wait = new WebDriverWait(aDriver,10,10);//This waits for 10 seconds for title to appear, polling every 50 ms.
-        waitForJStoLoad(wait);
+        //the following moved to the constructor as they don't work here when used as a page object
+       // wait = new WebDriverWait(driver,10,10);//This waits for 10 seconds for title to appear, polling every 50 ms.
+        //waitForJStoLoad(wait);
     }
 
     @Test
     public void clickCheckBox(String idOfCheckBox,String action) {
         try {
-            checkbox  = driver.findElement(By.cssSelector("input[id=\"" + idOfCheckBox + "\"]"));
+            //checkbox  = driver.findElement(By.cssSelector("input[id=\"" + idOfCheckBox + "\"]"));
+            //WebElement checkbox=new WebDriverWait(driver,10,10).until(presenceOfElementLocated(By.cssSelector("input[id=\"" + idOfCheckBox + "\"]")));
+            WebElement checkbox=wait.until(presenceOfElementLocated(By.cssSelector("input[id=\"" + idOfCheckBox + "\"]")));
             if (action=="clickon"){
                 //testThatCheckBoxIsTickedIfNotForceUsingJavaScript(elementUnderTest);
                 if (checkbox.isSelected()==false) //if TRUE then tester is asking for the wrong thing
