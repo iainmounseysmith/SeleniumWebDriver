@@ -156,7 +156,7 @@
                     <version>2.19</version>
                     <configuration>
                         <includes>
-                            <include>**/OriginalCodeRefactoredTest.class</include>
+                            <include>**/exampleGitBasedTests.class</include>
                               </includes>
                         <systemPropertyVariables>
                             <propertyName>MY_DRIVER</propertyName>
