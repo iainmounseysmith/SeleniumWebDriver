@@ -18,7 +18,7 @@ public class exampleGitBasedTests {
     @Before
     public void setupTest() {
         //set(driverOrBrowserName.EDGE,remoteHostName.GRID,driverOrBrowserName.EDGE);
-        set(driverOrBrowserName.GOOGLECHROME);
+        //set(driverOrBrowserName.GOOGLECHROME);
         get(getUrl("alerts"));
         testIndividualCheckBox = new IndividualCheckBoxTest(aDriver);
 
