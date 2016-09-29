@@ -10,7 +10,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({//we separate classes with a comma
-        OriginalCodeRefactoredTest.class
+        exampleGitBasedTests.class
 })
 public class SuiteTest4GIT {
 }
