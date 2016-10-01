@@ -129,7 +129,7 @@
                     <version>2.19</version>
                     <configuration>
                         <includes>
-                            <include>**/SuiteTest4GIT.class</include>
+                            <include>SuiteTest4GIT.class</include>
                         </includes>
                         <systemPropertyVariables>
                             <propertyName>MY_DRIVER</propertyName>
