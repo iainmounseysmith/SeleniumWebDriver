@@ -12,7 +12,7 @@ import static com.selenium.environment.MyDriverManager.*;
 /**
  * Created by Iain Mounsey-Smith on 27/09/2016.
  */
-public class exampleGitBasedTests {
+public class exampleGitBasedTest {
     public IndividualCheckBoxTest testIndividualCheckBox;
 
     @Before
